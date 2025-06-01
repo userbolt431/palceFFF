@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Utensils, Building2, Car, ShoppingBag, Hotel, Calendar, ChevronRight, Info, History, Sun, Cloud, Star, Coffee } from 'lucide-react';
+import { MapPin, Utensils, Building2, Car, ShoppingBag, Hotel, Calendar, ChevronRight, Info, History, Sun, Cloud, Star, Coffee, Map, Clock, MessageSquare } from 'lucide-react';
 import { samplePlaces, sampleActivities, sampleEvents } from '../data/samples';
 
 const images = [
@@ -21,6 +21,106 @@ const guideCategories = [
     a must-visit destination for travelers seeking unique cultural experiences and stunning photography opportunities.`
   },
   {
+    id: 'map',
+    icon: <Map size={20} />,
+    title: 'Interactive Map',
+    content: {
+      type: 'map',
+      center: { lat: 35.1715, lng: -5.2697 },
+      zoom: 14,
+      markers: [
+        { lat: 35.1715, lng: -5.2697, title: 'Medina', description: 'Historic city center' },
+        { lat: 35.1686, lng: -5.2638, title: 'Plaza Uta el-Hammam', description: 'Main square' },
+        { lat: 35.1697, lng: -5.2614, title: 'Kasbah', description: 'Historic fortress' }
+      ]
+    }
+  },
+  {
+    id: 'weather',
+    icon: <Sun size={20} />,
+    title: 'Weather',
+    content: {
+      type: 'weather',
+      current: {
+        temp: 22,
+        condition: 'Sunny',
+        humidity: 65,
+        wind: 12
+      },
+      forecast: [
+        { day: 'Monday', high: 24, low: 15, condition: 'Sunny' },
+        { day: 'Tuesday', high: 23, low: 14, condition: 'Partly Cloudy' },
+        { day: 'Wednesday', high: 22, low: 13, condition: 'Sunny' },
+        { day: 'Thursday', high: 25, low: 16, condition: 'Clear' },
+        { day: 'Friday', high: 23, low: 15, condition: 'Partly Cloudy' }
+      ]
+    }
+  },
+  {
+    id: 'best-time',
+    icon: <Clock size={20} />,
+    title: 'Best Time to Visit',
+    content: {
+      type: 'seasons',
+      recommendations: [
+        {
+          season: 'Spring (March-May)',
+          rating: 5,
+          description: 'Perfect weather, moderate temperatures, beautiful blooms'
+        },
+        {
+          season: 'Summer (June-August)',
+          rating: 3,
+          description: 'Hot temperatures, crowded but lively atmosphere'
+        },
+        {
+          season: 'Autumn (September-November)',
+          rating: 4,
+          description: 'Pleasant weather, fewer crowds, great for photography'
+        },
+        {
+          season: 'Winter (December-February)',
+          rating: 2,
+          description: 'Cool temperatures, occasional rain, quiet season'
+        }
+      ]
+    }
+  },
+  {
+    id: 'forum',
+    icon: <MessageSquare size={20} />,
+    title: 'Travel Forum',
+    content: {
+      type: 'forum',
+      topics: [
+        {
+          title: 'Best photo spots in Chefchaouen?',
+          author: 'PhotoLover',
+          replies: 24,
+          lastActive: '2h ago'
+        },
+        {
+          title: 'Where to stay in the Medina',
+          author: 'Traveler123',
+          replies: 15,
+          lastActive: '5h ago'
+        },
+        {
+          title: 'Local food recommendations',
+          author: 'FoodieExplorer',
+          replies: 32,
+          lastActive: '1d ago'
+        },
+        {
+          title: 'Getting from Tangier to Chefchaouen',
+          author: 'MoroccoBound',
+          replies: 18,
+          lastActive: '2d ago'
+        }
+      ]
+    }
+  },
+  {
     id: 'history',
     icon: <History size={20} />,
     title: 'History',
@@ -28,15 +128,6 @@ const guideCategories = [
     The blue color, which now defines the city, was introduced by Jewish refugees in 1492, 
     who considered blue as a symbol of heaven and sky. The tradition continues today, creating 
     the unique atmosphere that attracts visitors from around the world.`
-  },
-  {
-    id: 'weather',
-    icon: <Sun size={20} />,
-    title: 'Weather',
-    content: `Chefchaouen enjoys a Mediterranean climate with warm summers and mild winters. 
-    The best time to visit is during spring (March-May) or autumn (September-November) when 
-    temperatures are pleasant and rainfall is minimal. Summer temperatures can reach 35°C (95°F), 
-    while winters are cool with occasional rain.`
   },
   {
     id: 'highlights',
@@ -48,18 +139,6 @@ const guideCategories = [
     • Grand Mosque - Historic mosque with unique octagonal minaret
     • Kasbah Museum - Former prison turned museum with city views
     • Ras el-Maa - Waterfall and gathering spot for locals`
-  },
-  {
-    id: 'tips',
-    icon: <Coffee size={20} />,
-    title: 'Local Tips',
-    content: `
-    • Best photo opportunities are early morning or late afternoon
-    • Respect local customs by dressing modestly
-    • Learn basic Arabic or French phrases
-    • Negotiate prices in markets
-    • Try local goat cheese and mountain olive oil
-    • Visit the Spanish Mosque for sunset views`
   }
 ];
 
@@ -85,7 +164,122 @@ const ChefchaouenPage: React.FC = () => {
     { type: 'transport', icon: <Car size={20} />, label: 'Transport' }
   ];
 
-  const renderContent = () => {
+  const renderGuideContent = () => {
+    const category = guideCategories.find(c => c.id === selectedGuideCategory);
+    if (!category) return null;
+
+    if (typeof category.content === 'string') {
+      return (
+        <div className="p-4 bg-slate-50 rounded-lg">
+          <h3 className="font-medium text-slate-800 mb-2">{category.title}</h3>
+          <p className="text-sm text-slate-600 whitespace-pre-line">{category.content}</p>
+        </div>
+      );
+    }
+
+    switch (category.content.type) {
+      case 'weather':
+        return (
+          <div className="p-4 bg-slate-50 rounded-lg">
+            <div className="mb-6">
+              <h3 className="font-medium text-slate-800 mb-4">Current Weather</h3>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-slate-700">{category.content.current.temp}°C</div>
+                <div className="text-slate-600">{category.content.current.condition}</div>
+              </div>
+              <div className="mt-2 text-sm text-slate-500">
+                <div>Humidity: {category.content.current.humidity}%</div>
+                <div>Wind: {category.content.current.wind} km/h</div>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-medium text-slate-800 mb-2">5-Day Forecast</h4>
+              <div className="space-y-2">
+                {category.content.forecast.map(day => (
+                  <div key={day.day} className="flex items-center justify-between text-sm">
+                    <span className="text-slate-600">{day.day}</span>
+                    <span className="text-slate-700">{day.high}° / {day.low}°</span>
+                    <span className="text-slate-600">{day.condition}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'seasons':
+        return (
+          <div className="p-4 bg-slate-50 rounded-lg">
+            <h3 className="font-medium text-slate-800 mb-4">When to Visit Chefchaouen</h3>
+            <div className="space-y-4">
+              {category.content.recommendations.map(season => (
+                <div key={season.season} className="border-b border-slate-200 pb-4 last:border-0">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-medium text-slate-700">{season.season}</h4>
+                    <div className="flex">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          size={16}
+                          className={i < season.rating ? 'text-yellow-400' : 'text-slate-300'}
+                          fill={i < season.rating ? 'currentColor' : 'none'}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-600">{season.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'forum':
+        return (
+          <div className="p-4 bg-slate-50 rounded-lg">
+            <h3 className="font-medium text-slate-800 mb-4">Recent Discussions</h3>
+            <div className="space-y-3">
+              {category.content.topics.map(topic => (
+                <div key={topic.title} className="bg-white p-3 rounded-lg shadow-sm">
+                  <h4 className="font-medium text-slate-800 mb-1">{topic.title}</h4>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-600">by {topic.author}</span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-slate-500">{topic.replies} replies</span>
+                      <span className="text-slate-400">{topic.lastActive}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="mt-4 w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Start New Discussion
+            </button>
+          </div>
+        );
+
+      case 'map':
+        return (
+          <div className="p-4 bg-slate-50 rounded-lg">
+            <h3 className="font-medium text-slate-800 mb-4">Interactive Map</h3>
+            <div className="bg-slate-200 h-[400px] rounded-lg flex items-center justify-center">
+              <p className="text-slate-600">Map integration will be implemented here</p>
+            </div>
+            <div className="mt-4 space-y-2">
+              {category.content.markers.map(marker => (
+                <div key={marker.title} className="flex items-center gap-2 text-sm">
+                  <MapPin size={16} className="text-blue-600" />
+                  <span className="font-medium text-slate-700">{marker.title}</span>
+                  <span className="text-slate-500">- {marker.description}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+    }
+  };
+
+  const renderMainContent = () => {
     if (selectedContent === 'slideshow') {
       return (
         <div className="relative h-[600px] overflow-hidden rounded-lg">
@@ -122,7 +316,6 @@ const ChefchaouenPage: React.FC = () => {
       );
     }
 
-    // Example content for other sections
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, index) => (
@@ -170,13 +363,8 @@ const ChefchaouenPage: React.FC = () => {
             ))}
           </div>
 
-          <div className="mt-6 p-4 bg-slate-50 rounded-lg">
-            <h3 className="font-medium text-slate-800 mb-2">
-              {guideCategories.find(c => c.id === selectedGuideCategory)?.title}
-            </h3>
-            <p className="text-sm text-slate-600 whitespace-pre-line">
-              {guideCategories.find(c => c.id === selectedGuideCategory)?.content}
-            </p>
+          <div className="mt-6">
+            {renderGuideContent()}
           </div>
         </div>
       </div>
@@ -207,7 +395,7 @@ const ChefchaouenPage: React.FC = () => {
 
         {/* Content Area */}
         <div className="container mx-auto px-4 py-6">
-          {renderContent()}
+          {renderMainContent()}
         </div>
       </div>
     </div>
