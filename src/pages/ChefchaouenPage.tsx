@@ -3,10 +3,10 @@ import { MapPin, Utensils, Building2, Car, ShoppingBag, Hotel, Calendar, Chevron
 import { samplePlaces, sampleActivities, sampleEvents } from '../data/samples';
 
 const images = [
-  'https://www.barcelo.com/guia-turismo/wp-content/uploads/chefchaouen.jpg',
-  'https://images.pexels.com/photos/4388167/pexels-photo-4388167.jpeg',
-  'https://images.pexels.com/photos/4388164/pexels-photo-4388164.jpeg',
-  'https://images.pexels.com/photos/3889843/pexels-photo-3889843.jpeg'
+  'https://bluedoorcuisine.com/wp-content/uploads/2023/03/milad-alizadeh-JibMa0FbyHw-unsplash-scaled.jpg',
+  'https://www.hachettebookgroup.com/wp-content/uploads/2019/01/Morocco_ChefchouenAerial_Zzvet-iStock-473937070.jpg',
+  'https://traveladdicts.net/wp-content/uploads/2018/05/Chefchaouen-Morocco-shops-rugs.jpg.webp',
+  'https://media.cntraveler.com/photos/55d63075c47ae13868aeb74f/master/pass/Chefchaouen-Lucy-Laucht-tout.jpg'
 ];
 
 type ContentType = 'slideshow' | 'places' | 'activities' | 'events' | 'hotels' | 'products' | 'restaurants' | 'transport';
@@ -104,6 +104,7 @@ const ChefchaouenPage: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent" />
             </div>
           ))}
+          
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-2">
             {images.map((_, index) => (
               <button
