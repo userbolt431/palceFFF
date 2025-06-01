@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Utensils, Building2, Car, ShoppingBag, Hotel, Calendar } from 'lucide-react';
+import { MapPin, Utensils, Building2, Car, ShoppingBag, Hotel, Calendar, ChevronRight, Info, History, Sun, Cloud, Star, Coffee } from 'lucide-react';
 import { samplePlaces, sampleActivities, sampleEvents } from '../data/samples';
 
 const images = [
@@ -11,9 +11,62 @@ const images = [
 
 type ContentType = 'slideshow' | 'places' | 'activities' | 'events' | 'hotels' | 'products' | 'restaurants' | 'transport';
 
+const guideCategories = [
+  {
+    id: 'overview',
+    icon: <Info size={20} />,
+    title: 'Overview',
+    content: `Chefchaouen, known as the "Blue Pearl of Morocco", is famous for its striking blue-painted buildings 
+    and winding alleyways. Founded in 1471, this enchanting city nestled in the Rif Mountains has become 
+    a must-visit destination for travelers seeking unique cultural experiences and stunning photography opportunities.`
+  },
+  {
+    id: 'history',
+    icon: <History size={20} />,
+    title: 'History',
+    content: `The city was founded in 1471 as a small fortress to fight Portuguese invasions. 
+    The blue color, which now defines the city, was introduced by Jewish refugees in 1492, 
+    who considered blue as a symbol of heaven and sky. The tradition continues today, creating 
+    the unique atmosphere that attracts visitors from around the world.`
+  },
+  {
+    id: 'weather',
+    icon: <Sun size={20} />,
+    title: 'Weather',
+    content: `Chefchaouen enjoys a Mediterranean climate with warm summers and mild winters. 
+    The best time to visit is during spring (March-May) or autumn (September-November) when 
+    temperatures are pleasant and rainfall is minimal. Summer temperatures can reach 35°C (95°F), 
+    while winters are cool with occasional rain.`
+  },
+  {
+    id: 'highlights',
+    icon: <Star size={20} />,
+    title: 'Highlights',
+    content: `
+    • The Medina - A UNESCO World Heritage site with blue-washed buildings
+    • Plaza Uta el-Hammam - The main square with restaurants and cafes
+    • Grand Mosque - Historic mosque with unique octagonal minaret
+    • Kasbah Museum - Former prison turned museum with city views
+    • Ras el-Maa - Waterfall and gathering spot for locals`
+  },
+  {
+    id: 'tips',
+    icon: <Coffee size={20} />,
+    title: 'Local Tips',
+    content: `
+    • Best photo opportunities are early morning or late afternoon
+    • Respect local customs by dressing modestly
+    • Learn basic Arabic or French phrases
+    • Negotiate prices in markets
+    • Try local goat cheese and mountain olive oil
+    • Visit the Spanish Mosque for sunset views`
+  }
+];
+
 const ChefchaouenPage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedContent, setSelectedContent] = useState<ContentType>('slideshow');
+  const [selectedGuideCategory, setSelectedGuideCategory] = useState('overview');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -90,32 +143,71 @@ const ChefchaouenPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Navigation */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="container mx-auto px-4">
-          <nav className="flex justify-center">
-            {navigationItems.map(({ type, icon, label }) => (
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Guide Sidebar */}
+      <div className="w-80 bg-white border-r border-slate-200 overflow-y-auto">
+        <div className="p-6">
+          <h1 className="text-2xl font-bold text-slate-800 mb-1">Chefchaouen</h1>
+          <p className="text-slate-500 text-sm mb-6">The Blue Pearl of Morocco</p>
+          
+          <div className="space-y-2">
+            {guideCategories.map(category => (
               <button
-                key={type}
-                onClick={() => setSelectedContent(type as ContentType)}
-                className={`px-6 py-4 flex items-center gap-2 transition-colors ${
-                  selectedContent === type
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-slate-600 hover:text-slate-900'
+                key={category.id}
+                onClick={() => setSelectedGuideCategory(category.id)}
+                className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+                  selectedGuideCategory === category.id
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'hover:bg-slate-50 text-slate-700'
                 }`}
               >
-                {icon}
-                <span>{label}</span>
+                <div className="flex items-center">
+                  <span className="mr-3">{category.icon}</span>
+                  <span>{category.title}</span>
+                </div>
               </button>
             ))}
-          </nav>
+          </div>
+
+          <div className="mt-6 p-4 bg-slate-50 rounded-lg">
+            <h3 className="font-medium text-slate-800 mb-2">
+              {guideCategories.find(c => c.id === selectedGuideCategory)?.title}
+            </h3>
+            <p className="text-sm text-slate-600 whitespace-pre-line">
+              {guideCategories.find(c => c.id === selectedGuideCategory)?.content}
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-6">
-        {renderContent()}
+      <div className="flex-1">
+        {/* Navigation */}
+        <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
+          <div className="container mx-auto px-4">
+            <nav className="flex justify-center">
+              {navigationItems.map(({ type, icon, label }) => (
+                <button
+                  key={type}
+                  onClick={() => setSelectedContent(type as ContentType)}
+                  className={`px-6 py-4 flex items-center gap-2 transition-colors ${
+                    selectedContent === type
+                      ? 'text-blue-600 border-b-2 border-blue-600'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  {icon}
+                  <span>{label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="container mx-auto px-4 py-6">
+          {renderContent()}
+        </div>
       </div>
     </div>
   );
