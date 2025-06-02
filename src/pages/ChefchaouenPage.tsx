@@ -170,7 +170,7 @@ const ChefchaouenPage: React.FC = () => {
 
     if (typeof category.content === 'string') {
       return (
-        <div className="p-4 bg-slate-50 rounded-lg">
+        <div className="p-4 bg-white rounded-lg shadow-sm">
           <h3 className="font-medium text-slate-800 mb-2">{category.title}</h3>
           <p className="text-sm text-slate-600 whitespace-pre-line">{category.content}</p>
         </div>
@@ -180,7 +180,7 @@ const ChefchaouenPage: React.FC = () => {
     switch (category.content.type) {
       case 'weather':
         return (
-          <div className="p-4 bg-slate-50 rounded-lg">
+          <div className="p-4 bg-white rounded-lg shadow-sm">
             <div className="mb-6">
               <h3 className="font-medium text-slate-800 mb-4">Current Weather</h3>
               <div className="flex items-center justify-between">
@@ -209,7 +209,7 @@ const ChefchaouenPage: React.FC = () => {
 
       case 'seasons':
         return (
-          <div className="p-4 bg-slate-50 rounded-lg">
+          <div className="p-4 bg-white rounded-lg shadow-sm">
             <h3 className="font-medium text-slate-800 mb-4">When to Visit Chefchaouen</h3>
             <div className="space-y-4">
               {category.content.recommendations.map(season => (
@@ -236,11 +236,11 @@ const ChefchaouenPage: React.FC = () => {
 
       case 'forum':
         return (
-          <div className="p-4 bg-slate-50 rounded-lg">
+          <div className="p-4 bg-white rounded-lg shadow-sm">
             <h3 className="font-medium text-slate-800 mb-4">Recent Discussions</h3>
             <div className="space-y-3">
               {category.content.topics.map(topic => (
-                <div key={topic.title} className="bg-white p-3 rounded-lg shadow-sm">
+                <div key={topic.title} className="bg-slate-50 p-3 rounded-lg">
                   <h4 className="font-medium text-slate-800 mb-1">{topic.title}</h4>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-slate-600">by {topic.author}</span>
@@ -260,9 +260,9 @@ const ChefchaouenPage: React.FC = () => {
 
       case 'map':
         return (
-          <div className="p-4 bg-slate-50 rounded-lg">
+          <div className="p-4 bg-white rounded-lg shadow-sm">
             <h3 className="font-medium text-slate-800 mb-4">Interactive Map</h3>
-            <div className="bg-slate-200 h-[400px] rounded-lg flex items-center justify-center">
+            <div className="bg-slate-100 h-[400px] rounded-lg flex items-center justify-center">
               <p className="text-slate-600">Map integration will be implemented here</p>
             </div>
             <div className="mt-4 space-y-2">
@@ -277,63 +277,6 @@ const ChefchaouenPage: React.FC = () => {
           </div>
         );
     }
-  };
-
-  const renderMainContent = () => {
-    if (selectedContent === 'slideshow') {
-      return (
-        <div className="relative h-[600px] overflow-hidden rounded-lg">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <img
-                src={image}
-                alt="Chefchaouen"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent" />
-            </div>
-          ))}
-          
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-2">
-            {images.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentImageIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  index === currentImageIndex 
-                    ? 'bg-white w-4' 
-                    : 'bg-white/50 hover:bg-white/75'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div className="h-48 bg-slate-100" />
-            <div className="p-4">
-              <h3 className="font-medium text-lg mb-2">
-                {selectedContent.charAt(0).toUpperCase() + selectedContent.slice(1)} Item {index + 1}
-              </h3>
-              <p className="text-slate-600 text-sm">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
   };
 
   return (
@@ -362,41 +305,46 @@ const ChefchaouenPage: React.FC = () => {
               </button>
             ))}
           </div>
-
-          <div className="mt-6">
-            {renderGuideContent()}
-          </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1">
-        {/* Navigation */}
-        <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
-          <div className="container mx-auto px-4">
-            <nav className="flex justify-center">
-              {navigationItems.map(({ type, icon, label }) => (
-                <button
-                  key={type}
-                  onClick={() => setSelectedContent(type as ContentType)}
-                  className={`px-6 py-4 flex items-center gap-2 transition-colors ${
-                    selectedContent === type
-                      ? 'text-blue-600 border-b-2 border-blue-600'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  {icon}
-                  <span>{label}</span>
-                </button>
-              ))}
-            </nav>
+      <div className="flex-1 p-6">
+        {/* Slideshow */}
+        <div className="relative h-[300px] mb-6 rounded-lg overflow-hidden">
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <img
+                src={image}
+                alt="Chefchaouen"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent" />
+            </div>
+          ))}
+          
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === currentImageIndex 
+                    ? 'bg-white w-4' 
+                    : 'bg-white/50 hover:bg-white/75'
+                }`}
+              />
+            ))}
           </div>
         </div>
 
-        {/* Content Area */}
-        <div className="container mx-auto px-4 py-6">
-          {renderMainContent()}
-        </div>
+        {/* Guide Content */}
+        {renderGuideContent()}
       </div>
     </div>
   );
